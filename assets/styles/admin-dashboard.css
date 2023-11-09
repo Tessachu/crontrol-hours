@@ -1,7 +1,7 @@
 /*!
     Name: admin-dashboard.css
     Author: AuRise Creative | https://aurisecreative.com
-    Last Modified: March 30, 2023, at 19:24
+    Last Modified: November 9, 2023, at 11:01
 */
 
 .au-plugin {
@@ -15,11 +15,13 @@
     --au-plugin-medium-border: #666666;
     --au-plugin-text: #333333;
     --au-plugin-black: #000000;
+    --au-plugin-radius: 7px;
+    --au-plugin-font-size: 16px;
     --au-switch-width: 80px;
     --au-switch-height: 30px;
     --au-switch-ball: 20px;
     cursor: default;
-    padding-right: 1rem;
+    padding-right: var(--au-plugin-font-size);
 }
 
 .au-plugin:after {
@@ -29,6 +31,14 @@
     height: 1px;
     opacity: 0;
     clear: both;
+}
+
+.au-plugin a:focus,
+.au-plugin a:focus .media-icon img,
+.au-plugin a:focus .plugin-icon,
+.au-plugin .wp-person a:focus .gravatar {
+    box-shadow: 0 0 0 1px #4f94d4, 0 0 2px 1px rgba(79, 148, 212, 0.8);
+    box-shadow: 0 0 0 1px var(--au-plugin-accent-color), 0 0 2px 1px var(--au-plugin-accent-color);
 }
 
 
@@ -64,17 +74,17 @@ body.locale-es-mx .au-plugin {
 
 .au-plugin h1 {
     display: block;
-    margin: 0;
+    margin: var(--au-plugin-font-size) 0 0;
     padding: 0;
-    font-size: 3rem;
+    font-size: 3em;
     font-weight: 700;
     color: var(--au-plugin-accent-color);
     line-height: 1.2;
 }
 
 .au-plugin h1 small {
-    margin-left: 0.5rem;
-    font-size: 1.5rem;
+    margin-left: 0.5em;
+    font-size: 1.5em;
     font-style: italic;
     color: var(--au-plugin-accent-color-2);
 }
@@ -86,7 +96,7 @@ body.locale-es-mx .au-plugin {
 .au-plugin select,
 .au-plugin textarea,
 .au-plugin button {
-    font-size: 16px;
+    font-size: var(--au-plugin-font-size);
 }
 
 .au-plugin,
@@ -109,24 +119,67 @@ body.locale-es-mx .au-plugin {
 }
 
 .au-plugin .block {
-    margin-top: 1rem;
+    margin-top: var(--au-plugin-font-size);
     border: 1px solid var(--au-plugin-light-border);
     background-color: var(--au-plugin-white);
-    padding: 1rem;
+    padding: var(--au-plugin-font-size);
     -moz-box-shadow: 2px 2px 5px var(--au-plugin-light-shadow);
     -ms-box-shadow: 2px 2px 5px var(--au-plugin-light-shadow);
     -o-box-shadow: 2px 2px 5px var(--au-plugin-light-shadow);
     -webkit-box-shadow: 2px 2px 5px var(--au-plugin-light-shadow);
     box-shadow: 2px 2px 5px var(--au-plugin-light-shadow);
-    -moz-border-radius: 5px;
-    -ms-border-radius: 5px;
-    -o-border-radius: 5px;
-    -webkit-border-radius: 5px;
-    border-radius: 5px;
+    -moz-border-radius: var(--au-plugin-radius);
+    -ms-border-radius: var(--au-plugin-radius);
+    -o-border-radius: var(--au-plugin-radius);
+    -webkit-border-radius: var(--au-plugin-radius);
+    border-radius: var(--au-plugin-radius);
 }
 
 .au-plugin>h1+.updated {
     display: none;
+}
+
+
+/* Tabs */
+
+.au-plugin .nav-tab {
+    border-top-left-radius: var(--au-plugin-radius);
+    border-top-right-radius: var(--au-plugin-radius);
+}
+
+.au-plugin .nav-tab:hover,
+.au-plugin .nav-tab:focus {
+    color: var(--au-plugin-white);
+    background-color: var(--au-plugin-accent-color);
+}
+
+.au-plugin .nav-tab-active,
+.au-plugin .nav-tab-active:hover,
+.au-plugin .nav-tab-active:focus,
+.au-plugin .nav-tab-active:focus:active {
+    color: var(--au-plugin-text);
+    border-color: var(--au-plugin-light-border);
+    background-color: var(--au-plugin-light-bg);
+    border-bottom-color: var(--au-plugin-light-bg);
+    border-top-left-radius: var(--au-plugin-radius);
+    border-top-right-radius: var(--au-plugin-radius);
+}
+
+.au-plugin .nav-tab-wrapper {
+    border: none;
+}
+
+.au-plugin #tab-content .tab {
+    padding-left: 0.75em;
+    padding-right: 0.75em;
+    -moz-border-radius: var(--au-plugin-radius);
+    -ms-border-radius: var(--au-plugin-radius);
+    -o-border-radius: var(--au-plugin-radius);
+    -webkit-border-radius: var(--au-plugin-radius);
+    border-radius: var(--au-plugin-radius);
+    border: 1px solid var(--au-plugin-light-border);
+    /* border-right: 1px solid var(--au-plugin-light-border);
+    border-bottom: 1px solid var(--au-plugin-light-border); */
 }
 
 
@@ -137,33 +190,42 @@ body.locale-es-mx .au-plugin {
     display: block;
     width: 100%;
     max-width: 700px;
-    margin-bottom: 16px;
+    margin-bottom: var(--au-plugin-font-size);
     float: left;
 }
 
 
 /*
-Content is 700px
-Support Block is 250px with 16px padding, so 266px
-WP Admin Bar is 160px with 20px padding, so 180px
-700 + 266 + 180 = 1146
+    Content is 700px
+    Support Block is 250px with 16px padding, so 266px
+    WP Admin Bar is 160px with 20px padding, so 180px
+    700 + 266 + 180 = 1146
 */
 
-@media (min-width: 1146px) {
+@media (min-width: 1180px) {
     .au-plugin .au-plugin-support {
         width: 250px;
-        margin-left: 16px;
+        margin-left: var(--au-plugin-font-size);
     }
 }
 
 .au-plugin .au-plugin-support {
-    padding: 16px;
+    padding: var(--au-plugin-font-size);
     background: var(--au-plugin-white);
-    border-radius: 7px;
+    -moz-border-radius: var(--au-plugin-radius);
+    -ms-border-radius: var(--au-plugin-radius);
+    -o-border-radius: var(--au-plugin-radius);
+    -webkit-border-radius: var(--au-plugin-radius);
+    border-radius: var(--au-plugin-radius);
 }
 
 .au-plugin .au-plugin-support h2 {
     margin: 0;
+}
+
+.au-plugin .au-plugin-support h3 {
+    margin: var(--au-plugin-font-size) 0;
+    font-size: 1.2em;
 }
 
 .au-plugin .au-plugin-support p {
@@ -188,7 +250,11 @@ WP Admin Bar is 160px with 20px padding, so 180px
     background-color: var(--au-plugin-accent-color);
     padding: 2px 12px;
     text-align: center;
-    border-radius: 7px;
+    -moz-border-radius: var(--au-plugin-radius);
+    -ms-border-radius: var(--au-plugin-radius);
+    -o-border-radius: var(--au-plugin-radius);
+    -webkit-border-radius: var(--au-plugin-radius);
+    border-radius: var(--au-plugin-radius);
     color: var(--au-plugin-white);
     cursor: pointer;
     overflow-wrap: break-word;
@@ -273,6 +339,17 @@ WP Admin Bar is 160px with 20px padding, so 180px
     }
 }
 
+.au-plugin .au-plugin-support ul {
+    list-style: disc;
+    font-size: var(--au-plugin-font-size);
+    margin: 1em 0 0 1em;
+}
+
+.au-plugin .au-plugin-support ul li {
+    margin-bottom: 0.5em;
+    font-size: 0.85em;
+}
+
 
 /* Modules */
 
@@ -304,10 +381,10 @@ WP Admin Bar is 160px with 20px padding, so 180px
 .au-plugin pre {
     display: block;
     padding: 7px;
-    margin: 1rem 0;
+    margin: var(--au-plugin-font-size) 0;
 }
 
-.au-plugin .progress-spinner {
+.au-plugin .loading-spinner {
     background: none;
     border: none;
     text-align: center;
@@ -328,7 +405,7 @@ WP Admin Bar is 160px with 20px padding, so 180px
 
 .au-plugin form .note {
     color: var(--au-plugin-text);
-    padding: 0.25rem 0 0 0.5rem;
+    padding: 0.25em 0 0 0.5em;
 }
 
 .au-plugin .inline-code-snippet {
@@ -349,7 +426,7 @@ WP Admin Bar is 160px with 20px padding, so 180px
 
 .au-plugin .status-text.notice {
     margin: 0;
-    padding: 1em;
+    padding: var(--au-plugin-font-size);
     font-size: 1.2;
 }
 
@@ -393,7 +470,7 @@ WP Admin Bar is 160px with 20px padding, so 180px
 /* Form: Input */
 
 .au-plugin form table.form-table {
-    margin: 0 0 1rem;
+    margin: 0 0 var(--au-plugin-font-size);
 }
 
 .au-plugin input,
@@ -453,15 +530,15 @@ WP Admin Bar is 160px with 20px padding, so 180px
 .au-plugin input[type=number],
 .au-plugin input[type=time],
 .au-plugin select {
-    height: 2.5rem;
+    height: 2.5em;
 }
 
 
 /* Form Input: Text Area */
 
 .au-plugin textarea {
-    min-height: 3rem;
-    height: 4rem;
+    min-height: 3em;
+    height: 4em;
 }
 
 
@@ -470,10 +547,10 @@ WP Admin Bar is 160px with 20px padding, so 180px
 .au-plugin input[type=checkbox],
 .au-plugin input[type=radio] {
     display: block;
-    margin: 0 0.5rem 0 0;
+    margin: 0 0.5em 0 0;
     padding: 0;
-    width: 1rem;
-    height: 1rem;
+    width: var(--au-plugin-font-size);
+    height: var(--au-plugin-font-size);
     float: left;
     line-height: 1;
 }
@@ -631,21 +708,13 @@ WP Admin Bar is 160px with 20px padding, so 180px
     padding: 0;
 }
 
-.au-plugin .submit .progress-spinner {
-    display: inline-block;
-    vertical-align: middle;
-    font-size: inherit;
-    line-height: inherit;
-    margin: 0 0.5rem;
-}
-
 
 /* Form: Response Output */
 
 .au-plugin .form-response-output {
     border: 1px dashed var(--au-plugin-light-border);
-    padding: 16px;
-    margin: 16px 0;
+    padding: var(--au-plugin-font-size);
+    margin: var(--au-plugin-font-size) 0;
 }
 
 
@@ -670,7 +739,7 @@ WP Admin Bar is 160px with 20px padding, so 180px
 
 .au-plugin section table.au-table {
     width: 100%;
-    margin: 16px 0;
+    margin: var(--au-plugin-font-size) 0;
     border-collapse: collapse;
     border-spacing: 0;
     border: 1px solid var(--au-plugin-light-border);
@@ -763,7 +832,7 @@ html .au-plugin .ui-button.ui-state-disabled:active,
 
 .au-plugin .au-accordion .au-accordion-item .au-accordion-item-content ul {
     list-style: disc;
-    margin-left: 1.5rem;
+    margin-left: 1.5em;
 }
 
 

@@ -63,7 +63,7 @@ class Settings
         $basename = plugin_basename(CRONTROLHOURS_FILE); // E.g.: "plugin-folder/file.php"
         $slug = sanitize_key(dirname($basename)); // E.g.: "plugin-folder"
         $slug_underscore = str_replace('-', '_', $slug); // E.g.: "plugin_folder"
-        load_plugin_textdomain($slug, false, $slug . '/languages'); // Load additional translations if available
+        load_plugin_textdomain($slug); // Load translations if available
 
         self::$vars = array(
 
@@ -641,42 +641,43 @@ class Settings
         // Load only on our plugin page (a subpage of "Tools")
         if ($hook == 'tools_page_' . self::$vars['slug']) {
 
+            $debugging = defined('WP_DEBUG') && constant('WP_DEBUG');
+            $minified = defined('SCRIPT_DEBUG') && constant('SCRIPT_DEBUG') ? '.min' : '';
+
             // Register Bootstrap style
             wp_register_style(
                 self::$vars['prefix'] . 'layout', // Handle
-                self::$vars['url'] . 'assets/styles/pseudo-bootstrap.css', // Source URL
+                self::$vars['url'] . "assets/styles/pseudo-bootstrap$minified.css", // Source URL
                 array(), // Dependencies
-                WP_DEBUG ? @filemtime(self::$vars['path'] . 'assets/styles/pseudo-bootstrap.css') : self::$vars['version'] // Version
+                $debugging ? @filemtime(self::$vars['path'] . "assets/styles/pseudo-bootstrap$minified.css") : self::$vars['version'] // Version
             );
 
             // Plugin Stylesheets
             wp_enqueue_style(
                 self::$vars['prefix'] . 'dashboard',
-                self::$vars['url'] . 'assets/styles/admin-dashboard.css',
-                array(
-                    self::$vars['prefix'] . 'layout' // Pseudo bootstrap
-                ),
-                WP_DEBUG ? @filemtime(self::$vars['path'] . 'assets/styles/admin-dashboard.css') : self::$vars['version']
+                self::$vars['url'] . "assets/styles/admin-dashboard$minified.css",
+                array(self::$vars['prefix'] . 'layout'), // Pseudo bootstrap
+                $debugging ? @filemtime(self::$vars['path'] . "assets/styles/admin-dashboard$minified.css") : self::$vars['version']
             );
 
             // Plugin Scripts
             wp_enqueue_script(
                 self::$vars['prefix'] . 'dashboard', // Handle
-                self::$vars['url'] . 'assets/scripts/admin-dashboard.js', // Source URL
-                array(
-                    'jquery' // Loading tabs depend on jQuery
-                ),
-                WP_DEBUG ? @filemtime(self::$vars['path'] . 'assets/scripts/admin-dashboard.js') : self::$vars['version'], // Version
-                true // Load in footer
+                self::$vars['url'] . "assets/scripts/admin-dashboard$minified.js", // Source URL
+                array('jquery'), // Loading tabs depend on jQuery
+                $debugging ? @filemtime(self::$vars['path'] . "assets/scripts/admin-dashboard$minified.js") : self::$vars['version'], // Version
+                array('in_footer' => true, 'strategy' => 'defer') // Load async in footer
             );
-            wp_localize_script(
-                self::$vars['prefix'] . 'dashboard', // Handle
-                'au_dashboard', // Localized object
-                array(
-                    'ajax_url' => admin_url('admin-ajax.php'), // AJAX url
-                    // Localized strings
-                    'text' => array()
-                )
+            wp_add_inline_script(
+                self::$vars['prefix'] . 'dashboard',
+                sprintf(
+                    'window["%s"]=%s;',
+                    'au_dashboard', // JS object
+                    json_encode(array(
+                        'ajax_url' => admin_url('admin-ajax.php'), // AJAX url
+                    ))
+                ),
+                'before'
             );
         }
     }

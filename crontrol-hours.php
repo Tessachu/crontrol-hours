@@ -3,19 +3,19 @@
 /**
  * Plugin Name: Crontrol Hours
  * Description: Take control of your CRON jobs by restricting them to your website's low traffic hours.
- * Version: 2.0.0
+ * Version: VERSION_PLACEHOLDER
  * Author: AuRise Creative
  * Author URI: https://aurisecreative.com/
  * Plugin URI: https://aurisecreative.com/crontrol-hours/
  * License: GPL v3
+ * License URI: http://www.gnu.org/licenses/gpl-3.0.html
  * Requires at least: 5.8
  * Requires PHP: 5.6.20
  * Text Domain: crontrol-hours
- * Domain Path: /languages/
  *
  * @package AuRise\Plugin\CrontrolHours
- * @copyright Copyright (c) 2023, AuRise Creative - support@aurisecreative.com
- * @license   http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License, version 3 or higher
+ * @copyright Copyright (c) 2023 Tessa Watkins, AuRise Creative <tessa@aurisecreative.com>
+ * @license http://www.gnu.org/licenses/gpl-3.0.html GNU General Public License, version 3 or higher
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,18 +32,20 @@
  */
 
 defined('ABSPATH') || exit; // Exit if accessed directly
+defined('CRONTROLHOURS_FILE') || define('CRONTROLHOURS_FILE', __FILE__); // Define root file
+defined('CRONTROLHOURS_VERSION') || define('CRONTROLHOURS_VERSION', 'VERSION_PLACEHOLDER'); // Define plugin version
 
-// Define root file
-defined('CRONTROLHOURS_FILE') || define('CRONTROLHOURS_FILE', __FILE__);
+require_once('includes/class-utilities.php'); // Load the utilities class
+require_once('includes/class-settings.php'); // Load the settings class
+require_once('includes/class-main.php'); // Load the main plugin class
 
-// Define plugin version
-defined('CRONTROLHOURS_VERSION') || define('CRONTROLHOURS_VERSION', '2.0.0');
-
-// Load the utilities class: AuRise\Plugin\CrontrolHours\Utilities
-require_once('includes/class-utilities.php');
-
-// Load the settings class: AuRise\Plugin\CrontrolHours\Settings
-require_once('includes/class-settings.php');
-
-// Load the main plugin class: AuRise\Plugin\CrontrolHours\Main
-require_once('includes/class-main.php');
+/**
+ * The global instance of the Main plugin class
+ *
+ * @var AuRise\Plugin\CrontrolHours\Main
+ *
+ * @since 3.0.0
+ */
+$au_init_plugin = str_replace('-', '_', sanitize_key(dirname(plugin_basename(CRONTROLHOURS_FILE)))); // E.g. `plugin_folder`
+global ${$au_init_plugin}; // I.e. `$plugin_folder`
+${$au_init_plugin} = AuRise\Plugin\CrontrolHours\Main::instance(); // Run once to init

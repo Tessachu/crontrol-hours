@@ -407,24 +407,3 @@ class Main
         return $new_dt;
     }
 }
-
-/**
- * Returns the main instance
- *
- * @since  1.0.0
- *
- * @return Main
- */
-function limit_cron_hours()
-{
-    return Main::instance();
-}
-
-/**
- * The global instance of the main class
- *
- * @var Main
- * @since 1.0.0
- */
-global $limit_cron_hours;
-$limit_cron_hours = limit_cron_hours();//Run once to init

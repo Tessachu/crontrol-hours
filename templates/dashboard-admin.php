@@ -1,4 +1,5 @@
-<?php if (isset($_GET['settings-updated'])) {
+<?php
+if (isset($_GET['settings-updated'])) {
     add_settings_error(
         $args['plugin_settings']['prefix'] . 'messages',
         $args['plugin_settings']['prefix'] . 'message',
@@ -25,7 +26,7 @@ settings_errors($args['plugin_settings']['prefix'] . 'messages'); ?>
         } ?>
     </h1>
     <div class="au-plugin-admin-ui">
-        <div class="progress-spinner">
+        <div class="loading-spinner">
             <img src="<?php echo (esc_url($args['plugin_settings']['url'])); ?>assets/images/progress.gif" alt="<?php _e('Loading dashboard, please wait…', 'crontrol-hours'); ?>" width="32" height="32" />
         </div>
         <div class="admin-ui hide">
@@ -39,7 +40,7 @@ settings_errors($args['plugin_settings']['prefix'] . 'messages'); ?>
                 <section id="settings" class="tab">
                     <?php foreach ($args['plugin_settings']['options'] as $option_group_name => $group) {
                         $option_group = $args['plugin_settings']['prefix'] . $option_group_name;
-                        echo ('<form method="post" action="options.php">');
+                        printf('<form data-group="%s" method="post" action="options.php">', esc_attr($option_group));
                         settings_fields($option_group);
                         printf('<fieldset class="%s"><h2>%s</h2>', esc_attr($option_group_name), esc_html($group['title']));
                         echo ('<table class="form-table" role="presentation">');
@@ -169,5 +170,5 @@ settings_errors($args['plugin_settings']['prefix'] . 'messages'); ?>
             </div>
         </div>
     </div>
-    <?php load_template($args['plugin_settings']['path'] . 'templates/dashboard-support.php', true, $args); ?>
+    <?php load_template($args['plugin_settings']['path'] . 'templates/dashboard-support.php', true, $args['plugin_settings']); ?>
 </div>

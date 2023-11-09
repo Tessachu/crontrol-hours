@@ -3,10 +3,18 @@ module.exports = function(grunt) {
     // Install grunt locally: `npm install grunt --save-dev`
     grunt.initConfig({
 
+        // Read package data
+        pkg: grunt.file.readJSON('package.json'),
+
         clean: {
             build: {
-                // Delete everything in the build folder and all minified JS/CSS in working folder
-                src: ['./_build', './**/*.min.css', './**/*.min.css.map', './**/*.min.js', './**/*.min.js.map']
+                src: [
+                    // Delete everything in the build folder
+                    './_build',
+                    // Delete minified files and source maps from working directory
+                    './assets/scripts/*.min.js', './assets/scripts/*.js.map',
+                    './assets/styles/*.min.css', './assets/styles/*.css.map'
+                ]
             }
         },
         cssmin: {
@@ -16,8 +24,8 @@ module.exports = function(grunt) {
              * @see https://github.com/gruntjs/grunt-contrib-cssmin
              */
             options: {
-                report: 'min',
-                sourceMap: true
+                report: 'min', // Minimal reporting
+                sourceMap: false // Disable sourcemap creation
             },
             target: {
                 files: [{
@@ -46,19 +54,39 @@ module.exports = function(grunt) {
                     eval: true, // Mangle variable names in scopes where `eval` or `with` are used
                     toplevel: false // Do not mangle names declared in teh top level scope
                 },
-                sourceMap: true
+                sourceMap: false // Disable sourcemap creation
             },
             build: {
                 files: [{
                     expand: true, // Enable dynamic expansion
                     cwd: 'assets/scripts/', // Src matches are relative to this path
                     src: ['*.js', '!*.min.js'], // Actual pattern(s) to match (all JS except minified files)
-                    dest: './assets/scripts/', // Destination path prefix - generate it in working file, it will be copied to build
+                    dest: 'assets/scripts/', // Destination path prefix - generate it in working file, it will be copied to build
                     ext: '.min.js' // Dest filepaths will have this extension
                 }]
             }
         },
+        replace: {
+            /**
+             * Update Version Number
+             *
+             * @see https://www.npmjs.com/package/grunt-text-replace
+             */
+            build: {
+                src: ['_build/readme.txt', '_build/<%= pkg.name %>.php'], // Source files array (supports minimatch)
+                overwrite: true, // Overwrite matched source files
+                replacements: [{
+                    from: 'VERSION_PLACEHOLDER',
+                    to: "<%= pkg.version %>"
+                }]
+            }
+        },
         copy: {
+            /**
+             * Copy Files from Working Folder to Build Folder
+             *
+             * @see https://www.npmjs.com/package/grunt-contrib-copy
+             */
             build: {
                 // Copy files from working folder to build folder
                 expand: true, // Enable dynamic expansion
@@ -68,7 +96,9 @@ module.exports = function(grunt) {
                     // Exclude GIT
                     '!**/__/**', '!**/node_modules/**', '!.gitignore', '!package.json', '!package-lock.json', '!README.md', '!Gruntfile.js',
                     // Exclude WordPress Assets
-                    '!**/wp-assets/**'
+                    '!**/_wp-assets/**',
+                    // Exclude any zip files
+                    '!*.zip'
                 ],
                 dest: './_build'
             }
@@ -81,28 +111,27 @@ module.exports = function(grunt) {
              */
             deploy: {
                 options: {
-                    plugin_slug: 'wp-historian', // Plugin's slug as indicated by its repository url in https://wordpress.org/plugins/
+                    plugin_slug: '<%= pkg.name %>', // Plugin's slug as indicated by its repository url in https://wordpress.org/plugins/
                     svn_user: 'tessawatkinsllc', // WordPress repository username
                     build_dir: './_build', // Relative path to build directory
-                    assets_dir: 'wp-assets', // Relative path to assets directory (i.e. banners and screenshots)
-                    tmp_dir: '../../_plugins', // Location where SVN repository is checked out to (Note: Before the the repository is checked out `<tmp_dir>/<plugin_slug>` is deleted.)
+                    assets_dir: './_wp-assets/dist', // Relative path to assets directory (i.e. icons, banners, and screenshots)
+                    tmp_dir: './_svn', // Location where SVN repository is checked out to (Note: Before the the repository is checked out `<tmp_dir>/<plugin_slug>` is deleted.)
                     deploy_trunk: true, // Set to false to skip committing to the trunk directory (i.e. if only committing to assets)
                     deploy_tag: true // Set to false to skip creating a new tag (i.e. if only committing to trunk or assets)
                 }
             }
         }
-    })
+    });
 
     // Load Tasks
-    grunt.loadNpmTasks('grunt-contrib-clean'); // Deleting files
-    grunt.loadNpmTasks('grunt-contrib-cssmin'); // CSS minification & compression
-    grunt.loadNpmTasks('grunt-contrib-uglify'); // JS minification & compression
-    grunt.loadNpmTasks('grunt-contrib-copy'); // Copying files
-    grunt.loadNpmTasks('grunt-wp-deploy'); // WordPress Deploy
+    grunt.loadNpmTasks('grunt-contrib-clean'); // Delete files, install locally if missing: `npm install grunt-contrib-clean --save-dev`
+    grunt.loadNpmTasks('grunt-contrib-cssmin'); // Minify CSS files, install locally if missing: `npm install grunt-contrib-cssmin --save-dev`
+    grunt.loadNpmTasks('grunt-contrib-uglify'); // Minify JS files, install locally if missing: `npm install grunt-contrib-uglify --save-dev`
+    grunt.loadNpmTasks('grunt-text-replace'); // Replace version in files, install locally if missing: `npm install grunt-text-replace --save-dev`
+    grunt.loadNpmTasks('grunt-contrib-copy'); // Copy files, install locally if missing: `npm install grunt-contrib-copy --save-dev`
+    grunt.loadNpmTasks('grunt-wp-deploy'); // WordPress Deploy, install locally if missing: `npm install grunt-wp-deploy --save-dev`
 
-    // Register build task: usage `grunt build`
-    grunt.registerTask('build', ['clean:build', 'cssmin', 'uglify:build', 'copy:build']);
-
-    // Register deploy task: usage `grunt wp_deploy`
-    grunt.registerTask('deploy', ['wp_deploy:deploy']);
+    // Register Tasks
+    grunt.registerTask('build', ['clean:build', 'cssmin', 'uglify:build', 'copy:build', 'replace:build']); // Register build task, usage: `grunt build`
+    grunt.registerTask('deploy', ['wp_deploy:deploy']); // Register deploy task, usage `grunt wp_deploy`
 };

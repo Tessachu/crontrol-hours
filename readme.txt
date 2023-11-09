@@ -1,11 +1,11 @@
-﻿=== WP Crontrol Hours ===
+=== WP Crontrol Hours ===
 Contributors: tessawatkinsllc
 Donate link: https://just1voice.com/donate/
 Tags: cron, wp-cron, crontrol, restrict hours, limit hours, after hours, business hours
-Tested up to: 6.2
-Stable tag: 2.0.0
-License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
+Tested up to: 6.4
+Stable tag: VERSION_PLACEHOLDER
+License: GPLv3 or higher
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Take control of your CRON jobs by restricting them to your website's low traffic hours.
 
@@ -39,18 +39,18 @@ There are three (3) ways to install my plugin: automatically, upload, or manuall
 
 = Install Method 1: Automatic Installation =
 
-Automatic installation is the easiest option as WordPress handles the file transfers itself and you don’t need to leave your web browser.
+Automatic installation is the easiest option as WordPress handles the file transfers itself and you don't need to leave your web browser.
 
 1. Log in to your WordPress dashboard.
 1. Navigate to **Plugins > Add New**.
-1. Where it says “Keyword” in a dropdown, change it to “Author”
-1. In the search form, type “TessaWatkinsLLC” (results may begin populating as you type but my plugins will only show when the full name is there)
-1. Once you’ve found my plugin in the search results that appear, click the **Install Now** button and wait for the installation process to complete.
+1. Where it says "Keyword" in a dropdown, change it to "Author"
+1. In the search form, type `TessaWatkinsLLC` (results may begin populating as you type but my plugins will only show when the full name is there)
+1. Once you've found my plugin in the search results that appear, click the **Install Now** button and wait for the installation process to complete.
 1. Once the installation process is completed, click the **Activate** button to activate my plugin.
 
 = Install Method 2: Upload via WordPress Admin =
 
-This method involves is a little more involved. You don’t need to leave your web browser, but you’ll need to download and then upload the files yourself.
+This method involves is a little more involved. You don't need to leave your web browser, but you'll need to download and then upload the files yourself.
 
 1. [Download my plugin](https://wordpress.org/plugins/crontrol-hours/) from WordPress.org; it will be in the form of a zip file.
 1. Log in to your WordPress dashboard.
@@ -58,7 +58,7 @@ This method involves is a little more involved. You don’t need to leave your w
 1. Click the **Upload Plugin** button at the top of the screen.
 1. Select the zip file from your local file system that was downloaded in step 1.
 1. Click the **Install Now** button and wait for the installation process to complete.
-1. Once the installation process is completed, click the **Activate** button to activate my plugin.
+1. Once the installation process is completed, click the **Activate** button to activate it.
 
 = Install Method 3: Manual Installation =
 
@@ -82,61 +82,26 @@ This method is the most involved as it requires you to be familiar with the proc
 
 == Frequently Asked Questions ==
 
-= What if my end time is earlier than my start time? =
-
-That's okay! My plugin is smart enough to know that your window is running overnight into the next day.
-
-= How does it choose when to reschedule a CRON event? =
-
-It picks a random time within your chosen start and end times and pushes it back.
-
-= What timezone is used for setting start and end times? =
-
-It uses the website's timezone set in **Settings > General**
-
-= Do I have to configure anything after installing and activating this plugin? =
-
-Nope! The default window is set from 20:00 to 04:00 (or 8pm to 4am). Upon activation, the plugin creates its own daily CRON event scheduled for midnight in your website's timezone (defined in Settings > General) to check and fix all of the others to run within that window. So you can safely set it and forget it!
-
-= Does this work on multisites installations? =
-
-Yes! Each site in the multisite's network will get their own configuration settings page so they can be customized. However, if you want to ensure all sites use the same settings, you can override them with constant variables set in the `wp-config.php` file like this:
-
-`
-/** Crontrol Hours */
-define('CRONTROL_HOURS_INTERVALS', 'twicedaily,daily,weekly,monthly'); // Comma separated list of recurring intervals to check for
-define('CRONTROL_HOURS_FORCE_DAILY', '1'); // Sets "Force Daily" to true
-define('CRONTROL_HOURS_RESTRICT_FREQUENT', '1'); // Sets "Restrict Frequent" to true
-define('CRONTROL_HOURS_START_TIME', '23:00'); // Sets the start time
-define('CRONTROL_HOURS_END_TIME', '05:00'); // Sets the end time
-define('CRONTROL_HOURS_EXCLUDE', 'wordfence_daily_cron,otter_montly_scheduled_events'); // Comma separated list of hooks to exclude from being changed
-`
-
-It's also important to point out that each site in the network will need it's own `wp-cron.php` pinged whether you set it up via server tasks or with [Cron-Job.org](https://cron-job.org/).
-
-= I manage a lot of websites with custom configurations, is there an easy way to edit these settings without logging in? =
-
-Yes! I feel you there. You can set the following constant variables in your WordPress installation's `wp-config.php` file.
-
-`
-/** Crontrol Hours */
-define('CRONTROL_HOURS_INTERVALS', 'twicedaily,daily,weekly,monthly'); // Comma separated list of recurring intervals to check for
-define('CRONTROL_HOURS_FORCE_DAILY', '1'); // Sets "Force Daily" to true
-define('CRONTROL_HOURS_RESTRICT_FREQUENT', '1'); // Sets "Restrict Frequent" to true
-define('CRONTROL_HOURS_START_TIME', '23:00'); // Sets the start time
-define('CRONTROL_HOURS_END_TIME', '05:00'); // Sets the end time
-define('CRONTROL_HOURS_EXCLUDE', 'wordfence_daily_cron,otter_montly_scheduled_events'); // Comma separated list of hooks to exclude from being changed
-`
-
-Keep in mind that if you're using this on a multisite installation, these settings will override all sites on the network.
+Please check out the [FAQ on our website](https://aurisecreative.com/docs/crontrol-hours/frequently-asked-questions/?utm_source=wordpress.org&utm_medium=link&utm_campaign=crontrol-hours&utm_content=readme).
 
 == Upgrade Notice ==
 
-= 2.0.0 - March 30, 2023 =
-
-* Added the "Restrict Frequent" setting upon user request and small updates to the user interface.
+= VERSION_PLACEHOLDER =
+Updates to the backend admin screen and tested up to WordPress 6.4.
 
 == Changelog ==
+
+= 2.1.0 - November 9, 2023 =
+
+* Update: updated configuration to match other AuRise Creative plugins
+* Update: confirmed functionality for WordPress Core version 6.4
+* Feature: added additional resources in Plugin Support block on admin page (developer documentation, FAQ, and emergency website service)
+* Update: updated backend scripts to utilize defer strategy loading
+* Update: updated backend script to use `wp_add_inline_script` instead of `wp_localize_script` for AJAX URL.
+* Update: updated backend assets to use minified files when not debugging
+* Minor: updated JS files to use `let` and `const` instead of `var`
+* Minor: updated styles for admin page
+* Language: removed the `languages` folder and `Domain Path` in plugin to rely on [Translating WordPress](https://translate.wordpress.org/projects/wp-plugins/crontrol-hours/)
 
 = 2.0.0 - March 30, 2023 =
 
